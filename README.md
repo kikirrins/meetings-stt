@@ -26,8 +26,8 @@ Built around [`openai-whisper`](https://github.com/openai/whisper) with **Whispe
 ## Quick start
 
 ```bash
-git clone <your-repo-url> claude101-stt
-cd claude101-stt
+git clone https://github.com/kikirrins/meetings-stt.git
+cd meetings-stt
 bash setup.sh
 ```
 
