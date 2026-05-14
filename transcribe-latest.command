@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Double-click to transcribe the newest audio file in ~/Meetings/audio/.
-# First run will also download the ~600MB Parakeet model.
+# First run will also download the ~1.2 GB Parakeet TDT v3 model.
 
 set -e
 

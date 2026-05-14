@@ -1,18 +1,19 @@
-"""Claude101 Workshop — local MCP server exposing openai-whisper transcription.
+"""Claude101 Workshop — local MCP server exposing parakeet-mlx transcription.
 
 Standalone: uses a kit-local venv at ~/.claude101-stt/ and a kit-local model
-cache at ~/.claude101-stt/models/. Never touches any other Whisper install.
+cache at ~/.claude101-stt/models/. Never touches any other model cache.
 
 Run via Claude Desktop's MCP config (see claude_desktop_config.example.json).
 Stdio transport — no network exposure.
 
-Default model: Whisper Large v3, language locked to Spanish. Override via the
-WHISPER_MODEL and WHISPER_LANGUAGE environment variables in the MCP config.
+Default model: NVIDIA Parakeet TDT 0.6B v3 (multilingual, 25 European
+languages incl. Spanish, with automatic language detection). Override via
+the PARAKEET_MODEL environment variable in the MCP config.
 
 Tools exposed:
   - list_audio_files()                 -> list recordings in ~/Meetings/audio/
   - list_transcripts()                 -> list transcripts already produced
-  - transcribe_audio(filename, name?)  -> run whisper on a recording
+  - transcribe_audio(filename, name?)  -> run parakeet-mlx on a recording
   - read_transcript(name)              -> return transcript text
 """
 
@@ -35,11 +36,12 @@ NOTES_DIR = MEETINGS_DIR / "notes"
 
 KIT_DIR = HOME / ".claude101-stt"
 MODELS_DIR = KIT_DIR / "models"
-WHISPER_BIN = KIT_DIR / "bin" / "whisper"
+PARAKEET_BIN = KIT_DIR / "bin" / "parakeet-mlx"
 
-# Model defaults — override via env in the MCP config
-WHISPER_MODEL = os.environ.get("WHISPER_MODEL", "large-v3")
-WHISPER_LANGUAGE = os.environ.get("WHISPER_LANGUAGE", "Spanish")
+# Model default — override via env in the MCP config
+PARAKEET_MODEL = os.environ.get(
+    "PARAKEET_MODEL", "mlx-community/parakeet-tdt-0.6b-v3"
+)
 
 AUDIO_EXTS = {".wav", ".mp3", ".m4a", ".flac", ".ogg", ".aac", ".opus", ".mp4"}
 
@@ -87,10 +89,11 @@ def list_transcripts() -> str:
 
 @mcp.tool()
 def transcribe_audio(filename: str, output_name: str | None = None) -> str:
-    """Transcribe an audio file from ~/Meetings/audio/ using openai-whisper.
+    """Transcribe an audio file from ~/Meetings/audio/ using parakeet-mlx.
 
-    Uses Whisper Large v3 with language locked to Spanish by default
-    (override via WHISPER_MODEL / WHISPER_LANGUAGE env vars).
+    Uses NVIDIA Parakeet TDT 0.6B v3 by default — a multilingual model that
+    auto-detects the language (Spanish, English, and 23 more). Override
+    the model via the PARAKEET_MODEL env var.
 
     Args:
         filename: Name of the audio file inside ~/Meetings/audio/
@@ -108,30 +111,27 @@ def transcribe_audio(filename: str, output_name: str | None = None) -> str:
         audio_path = AUDIO_DIR / filename
     if not audio_path.exists():
         return f"ERROR: audio file not found: {audio_path}"
-    if not WHISPER_BIN.exists():
+    if not PARAKEET_BIN.exists():
         return (
-            f"ERROR: openai-whisper not installed at {WHISPER_BIN}. "
+            f"ERROR: parakeet-mlx not installed at {PARAKEET_BIN}. "
             "Run workshop-stt/setup.sh first."
         )
 
     stem = output_name or audio_path.stem
 
-    # Stage the audio under the desired stem so whisper's auto-named output
-    # files come out with the right basename.
+    # Stage the audio under the desired stem so parakeet-mlx's default
+    # output template ({filename}) produces the basename we want.
     with tempfile.TemporaryDirectory() as tmp_dir:
         staged = Path(tmp_dir) / f"{stem}{audio_path.suffix}"
         shutil.copy2(audio_path, staged)
 
         cmd = [
-            str(WHISPER_BIN),
+            str(PARAKEET_BIN),
             str(staged),
-            "--model", WHISPER_MODEL,
-            "--language", WHISPER_LANGUAGE,
-            "--model_dir", str(MODELS_DIR),
-            "--output_dir", str(TRANSCRIPTS_DIR),
-            "--output_format", "txt",
-            "--condition_on_previous_text", "False",
-            "--verbose", "False",
+            "--model", PARAKEET_MODEL,
+            "--output-dir", str(TRANSCRIPTS_DIR),
+            "--output-format", "txt",
+            "--cache-dir", str(MODELS_DIR),
         ]
 
         try:
@@ -139,14 +139,14 @@ def transcribe_audio(filename: str, output_name: str | None = None) -> str:
                 cmd, capture_output=True, text=True, check=True, timeout=60 * 60
             )
         except subprocess.CalledProcessError as e:
-            return f"ERROR: whisper failed (exit {e.returncode})\n{e.stderr}"
+            return f"ERROR: parakeet-mlx failed (exit {e.returncode})\n{e.stderr}"
         except subprocess.TimeoutExpired:
             return "ERROR: transcription timed out after 1 hour"
 
     transcript_path = TRANSCRIPTS_DIR / f"{stem}.txt"
     if not transcript_path.exists():
         return (
-            f"ERROR: whisper finished but no transcript at {transcript_path}.\n"
+            f"ERROR: parakeet-mlx finished but no transcript at {transcript_path}.\n"
             f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}"
         )
 

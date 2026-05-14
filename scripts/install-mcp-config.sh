@@ -66,8 +66,7 @@ cfg["mcpServers"]["claude101-stt"] = {
     "command": py_bin,
     "args": [server],
     "env": {
-        "WHISPER_MODEL": "large-v3",
-        "WHISPER_LANGUAGE": "Spanish",
+        "PARAKEET_MODEL": "mlx-community/parakeet-tdt-0.6b-v3",
     },
 }
 

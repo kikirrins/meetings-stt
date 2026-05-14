@@ -1,5 +1,5 @@
 {
-  "_comment": "TEMPLATE — replace REPLACE_WITH_REPO_PATH with the absolute path where you cloned this repo. Then merge the 'mcpServers' block into your Claude Desktop config at ~/Library/Application Support/Claude/claude_desktop_config.json and restart the app. If you'd rather not edit JSON by hand, run scripts/install-mcp-config.sh from the repo root.",
+  "_comment": "TEMPLATE — replace REPLACE_WITH_USERNAME and REPLACE_WITH_REPO_PATH. Then merge the 'mcpServers' block into your Claude Desktop config at ~/Library/Application Support/Claude/claude_desktop_config.json and restart the app. If you'd rather not edit JSON by hand, run scripts/install-mcp-config.sh from the repo root.",
   "mcpServers": {
     "claude101-stt": {
       "command": "/Users/REPLACE_WITH_USERNAME/.claude101-stt/bin/python",
@@ -7,8 +7,7 @@
         "REPLACE_WITH_REPO_PATH/mcp-server/server.py"
       ],
       "env": {
-        "WHISPER_MODEL": "large-v3",
-        "WHISPER_LANGUAGE": "Spanish"
+        "PARAKEET_MODEL": "mlx-community/parakeet-tdt-0.6b-v3"
       }
     }
   }
