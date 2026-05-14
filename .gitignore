@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtualenvs (the kit's venv lives at ~/.claude101-stt, not in-repo, but
+# guard against any local one)
+.venv/
+venv/
+env/
+
+# Workshop-local data — never commit recordings, transcripts, or models
+audio/
+transcripts/
+notes/
+models/
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.ogg
+*.opus
+*.pt
+*.bin
+*.safetensors
+
+# Editor / OS junk
+.DS_Store
+.idea/
+.vscode/
+*.swp
