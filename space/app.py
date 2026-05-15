@@ -11,6 +11,7 @@ Runs on HF Space free CPU tier:
 
 from __future__ import annotations
 
+import base64
 import os
 import tempfile
 import time
@@ -84,6 +85,59 @@ def transcribe(audio_path: str | None, language: str = "es") -> tuple[str, str]:
     return header + text, str(out_path)
 
 
+def transcribe_bytes(
+    audio_b64: str,
+    filename: str = "audio.mp3",
+    language: str = "es",
+) -> str:
+    """Transcribe a base64-encoded audio file. MCP-friendly: no URL needed.
+
+    Use this when calling from an MCP client that has the audio bytes locally
+    (e.g. Claude Code reading a file from disk and base64-encoding it). The
+    server decodes to a temp file, transcribes, and returns the transcript
+    text directly — no separate upload step.
+
+    Args:
+        audio_b64: Base64 string of the audio file's raw bytes. On a typical
+            workshop audio (10-min Spanish at 128 kbps), this is ~10-15 MB of
+            text. Keep individual calls under ~25 MB of base64 to be safe.
+        filename: Original filename (used only to pick a file extension so
+            ffmpeg/whisper can decode correctly). Default: "audio.mp3".
+        language: Two-letter language code ("es", "en", "pt", ...) or "auto".
+            Defaults to Spanish ("es").
+
+    Returns:
+        The transcript text as a single string (no UI markdown wrapper).
+    """
+    try:
+        audio_bytes = base64.b64decode(audio_b64, validate=True)
+    except Exception as exc:
+        return f"ERROR: invalid base64 payload — {exc}"
+
+    suffix = Path(filename).suffix or ".mp3"
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp.write(audio_bytes)
+        tmp_path = tmp.name
+
+    try:
+        lang_arg = None if language == "auto" else language
+        segments_iter, _info = model.transcribe(
+            tmp_path,
+            language=lang_arg,
+            beam_size=5,
+            condition_on_previous_text=False,
+            vad_filter=True,
+        )
+        text = " ".join(seg.text.strip() for seg in segments_iter).strip()
+    finally:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+
+    return text
+
+
 with gr.Blocks(title="Claude101 Transcribe") as demo:
     gr.Markdown(
         """
@@ -116,6 +170,10 @@ with gr.Blocks(title="Claude101 Transcribe") as demo:
             file_out = gr.File(label="Descargar .txt / Download .txt")
 
     run_btn.click(transcribe, inputs=[audio_in, lang_in], outputs=[text_out, file_out])
+
+    # API-only endpoint (no UI) — exposed as an MCP tool for clients that
+    # already have audio bytes on hand (e.g. Claude Code).
+    gr.api(transcribe_bytes)
 
     gr.Markdown(
         """
