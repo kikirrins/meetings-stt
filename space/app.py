@@ -140,4 +140,4 @@ with gr.Blocks(title="Claude101 Transcribe") as demo:
 if __name__ == "__main__":
     # mcp_server=True publishes every exposed function as an MCP tool at
     # /gradio_api/mcp/sse — Claude Desktop can connect to it directly.
-    demo.queue(max_size=20).launch(mcp_server=True, theme=gr.themes.Soft())
+    demo.queue(max_size=20).launch(mcp_server=True)
