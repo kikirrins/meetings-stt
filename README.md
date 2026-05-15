@@ -1,7 +1,23 @@
-# Claude101 — Local Speech-to-Text Kit
+# Claude101 — Speech-to-Text Kit
 
-Local, free, offline transcription for the **Claude101 workshop** exercise:
+Free transcription for the **Claude101 workshop** exercise:
 **audio → transcript → key points → email**.
+
+## 🚀 Modo rápido (Windows, Mac, Chromebook) — sin instalar nada
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kikirrins/meetings-stt/blob/main/colab/Claude101_Transcribe.ipynb)
+
+Haz clic en el botón **Open in Colab** ☝️ — sube tu audio, corre 4 celdas, descarga el transcript `.txt`. No necesitas Git, Python, ni nada. Funciona igual en Windows, Mac y Chromebook.
+
+> *Fast path (any OS, no install): click the **Open in Colab** badge above. Upload your audio, run 4 cells, download the `.txt`. No Git, no Python, no setup.*
+
+---
+
+## Modo local (Mac Apple Silicon) — instalación nativa
+
+Lo de abajo es **solo para usuarios técnicos en Mac M1/M2/M3/M4** que quieren la integración con Claude Desktop vía MCP. Si solo necesitas el transcript, usa la opción de Colab.
+
+*The rest of this README covers the **local install** — Apple Silicon Mac only, for users who want native Claude Desktop MCP integration. If you just need a transcript, use the Colab option above.*
 
 Built around [`parakeet-mlx`](https://github.com/senstella/parakeet-mlx) running NVIDIA's **Parakeet TDT 0.6B v3** — a 600M-parameter multilingual ASR model that runs on Apple Silicon in ~2 GB of RAM and auto-detects the language (Spanish, English, and 23 more). Everything runs on your machine — no API costs, no cloud upload. Pairs with **Claude Desktop** via a tiny local MCP server so you can transcribe straight from chat.
 
