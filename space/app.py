@@ -84,7 +84,7 @@ def transcribe(audio_path: str | None, language: str = "es") -> tuple[str, str]:
     return header + text, str(out_path)
 
 
-with gr.Blocks(title="Claude101 Transcribe", theme=gr.themes.Soft()) as demo:
+with gr.Blocks(title="Claude101 Transcribe") as demo:
     gr.Markdown(
         """
         # 🎙️ Claude101 — Transcribe audio (free, no install)
@@ -129,7 +129,7 @@ with gr.Blocks(title="Claude101 Transcribe", theme=gr.themes.Soft()) as demo:
         **Settings → Connectors** in Claude Desktop:*
 
         ```
-        https://<your-space-url>/gradio_api/mcp/sse
+        https://kikirrin-claude101-transcribe.hf.space/gradio_api/mcp/
         ```
 
         Luego en chat: *"Transcribe `audio.mp3` y extrae los pendientes."*
@@ -140,4 +140,4 @@ with gr.Blocks(title="Claude101 Transcribe", theme=gr.themes.Soft()) as demo:
 if __name__ == "__main__":
     # mcp_server=True publishes every exposed function as an MCP tool at
     # /gradio_api/mcp/sse — Claude Desktop can connect to it directly.
-    demo.queue(max_size=20).launch(mcp_server=True)
+    demo.queue(max_size=20).launch(mcp_server=True, theme=gr.themes.Soft())

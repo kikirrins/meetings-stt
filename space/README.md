@@ -4,11 +4,11 @@ emoji: 🎙️
 colorFrom: blue
 colorTo: green
 sdk: gradio
-sdk_version: "5.9.1"
+sdk_version: "6.14.0"
 app_file: app.py
 pinned: false
 license: mit
-short_description: Free Spanish/multilingual audio transcription for the Claude101 workshop
+short_description: Free Spanish/EN transcription for Claude101
 ---
 
 # Claude101 Transcribe — HF Space
@@ -29,7 +29,7 @@ Just drop a file and click *Transcribir*. The `.txt` downloads automatically.
 This Space exposes a native MCP server endpoint at:
 
 ```
-https://<your-username>-<space-name>.hf.space/gradio_api/mcp/sse
+https://kikirrin-claude101-transcribe.hf.space/gradio_api/mcp/
 ```
 
 Paste that URL into Claude Desktop **Settings → Connectors → Add custom connector** and the `transcribe` tool becomes available in any chat. Then ask Claude: *"Transcribe audio.mp3 and extract key points."*

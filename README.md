@@ -5,12 +5,13 @@ Free transcription for the **Claude101 workshop** exercise:
 
 ## 🌐 Modo más fácil — Hugging Face Space (sin instalar nada, funciona desde Claude Desktop)
 
-**URL:** `https://huggingface.co/spaces/<your-user>/claude101-transcribe` *(pega aquí la URL real cuando el Space esté desplegado)*
+**URL pública / Public URL:** https://kikirrin-claude101-transcribe.hf.space
+**Repo del Space:** https://huggingface.co/spaces/kikirrin/claude101-transcribe
 
 Sube un audio en el navegador y descarga el `.txt`. **También se conecta directamente a Claude Desktop** vía MCP: pega esta URL en **Settings → Connectors → Add custom connector**:
 
 ```
-https://<your-user>-claude101-transcribe.hf.space/gradio_api/mcp/sse
+https://kikirrin-claude101-transcribe.hf.space/gradio_api/mcp/
 ```
 
 …y Claude puede transcribir desde cualquier chat: *"Transcribe `audio.mp3` y extrae los pendientes."*
