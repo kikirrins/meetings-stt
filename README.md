@@ -3,13 +3,27 @@
 Free transcription for the **Claude101 workshop** exercise:
 **audio → transcript → key points → email**.
 
-## 🚀 Modo rápido (Windows, Mac, Chromebook) — sin instalar nada
+## 🌐 Modo más fácil — Hugging Face Space (sin instalar nada, funciona desde Claude Desktop)
+
+**URL:** `https://huggingface.co/spaces/<your-user>/claude101-transcribe` *(pega aquí la URL real cuando el Space esté desplegado)*
+
+Sube un audio en el navegador y descarga el `.txt`. **También se conecta directamente a Claude Desktop** vía MCP: pega esta URL en **Settings → Connectors → Add custom connector**:
+
+```
+https://<your-user>-claude101-transcribe.hf.space/gradio_api/mcp/sse
+```
+
+…y Claude puede transcribir desde cualquier chat: *"Transcribe `audio.mp3` y extrae los pendientes."*
+
+> *Easiest path — Hugging Face Space. Upload audio in the browser **or** plug the MCP URL into Claude Desktop's Connectors and let Claude orchestrate transcription. Zero install on the attendee's machine. Setup recipe: [`space/README.md`](space/README.md).*
+
+## 🚀 Modo Colab (alternativa) — corre en el navegador con GPU gratis
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kikirrins/meetings-stt/blob/main/colab/Claude101_Transcribe.ipynb)
 
-Haz clic en el botón **Open in Colab** ☝️ — sube tu audio, corre 4 celdas, descarga el transcript `.txt`. No necesitas Git, Python, ni nada. Funciona igual en Windows, Mac y Chromebook.
+Haz clic en el botón **Open in Colab** ☝️ — sube tu audio, corre 4 celdas, descarga el transcript `.txt`. Usa esta opción si el Space está dormido o si necesitas procesar audios largos con GPU.
 
-> *Fast path (any OS, no install): click the **Open in Colab** badge above. Upload your audio, run 4 cells, download the `.txt`. No Git, no Python, no setup.*
+> *Colab alternative: free T4 GPU, runs in the browser. Good fallback for long audios or if the HF Space is asleep.*
 
 ---
 
